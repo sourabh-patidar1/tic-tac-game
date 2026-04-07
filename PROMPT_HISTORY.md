@@ -59,5 +59,17 @@ This document chronicles the step-by-step prompts used to build this **Full-Stac
 
 ---
 
+## ☁️ Milestone 6: Deployment Readiness & DevOps
+### Prompt
+> "Make this project deployment-ready for a free hosting platform like Render. Add environment variable support, a production-grade server configuration (Gunicorn), a Procfile, and a Dockerfile. I want the final result to have a clear guide on how my clients can play the game at a professional URL."
+
+### Key Deliverables
+- **Environment Management:** Integrated `python-dotenv` for database and port configurations.
+- **Production Server:** Configured `Gunicorn` with `uvicorn` workers for stable hosting.
+- **Orchestration:** Added `Procfile` and `Dockerfile` for universal deployment support.
+- **Client Strategy:** Detailed step-by-step instructions for hosting on a free cloud provider.
+
+---
+
 > [!NOTE]
 > This project was developed as a collaborative effort between the developer and the **Antigravity AI Coding Assistant**, leveraging advanced agentic capabilities to produce high-quality, professional code.

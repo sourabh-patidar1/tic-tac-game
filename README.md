@@ -78,3 +78,34 @@ Open your web browser and navigate to:
 
 - The frontend is served statically by FastAPI.
 - Complete API documentation (Swagger UI) is automatically available at: **http://localhost:8000/docs**
+
+---
+
+## 🚀 Professional Deployment Guide (Free)
+
+To deploy this project to the public internet for free, we recommend using **Render**.
+
+### Step 1: Prepare Your Code
+1. Mirror these files to a **GitHub Repository**.
+2. Ensure you do NOT push a `.env` file (the `.env.example` is provided for reference).
+
+### Step 2: Deploy to Render
+1. Create a free account at [Render.com](https://render.com).
+2. Click **New +** > **Web Service**.
+3. Connect your GitHub repository.
+4. Configure the following:
+   - **Runtime**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app`
+5. Click **Deploy Web Service**.
+
+### Step 3: Access Your Game
+Once the build is complete, Render will provide a URL like:
+`https://tic-tac-toe-xyz.onrender.com`
+
+**This is the direct link your users and clients will hit to play the game!**
+
+---
+
+> [!NOTE]
+> **Persistence**: This app uses SQLite. On Render's free tier, the database resets when the service restarts. For permanent leaderboards, consider connecting a managed PostgreSQL database.
