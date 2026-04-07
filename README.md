@@ -9,6 +9,7 @@ A modern, responsive, and fully functional Tic Tac Toe web application built wit
 - **Persistent Game State**: All games are stored in an SQLite database using SQLAlchemy ORM.
 - **Leaderboard**: Track how many wins each player has over time.
 - **API Backend**: Real RESTful API built with FastAPI and validated by Pydantic.
+- **Development Log**: Check out the [Prompt History](PROMPT_HISTORY.md) to see how this project was built!
 
 ## Tech Stack
 
