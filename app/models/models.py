@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, DateTime
+from datetime import datetime
 from app.database.database import Base
 
 class Game(Base):
@@ -11,3 +12,5 @@ class Game(Base):
     current_turn = Column(String, default="X")
     winner = Column(String, nullable=True)  # "X", "O", "Draw", or None
     status = Column(String, default="ongoing")
+    created_at = Column(DateTime, default=datetime.utcnow)
+    moves_history = Column(String, default="")  # Comma-separated indices "0,4,8..."

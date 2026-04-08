@@ -13,6 +13,7 @@ class GameState(BaseModel):
     current_turn: str
     winner: Optional[str] = None
     status: str
+    moves_history: str = ""
 
     model_config = {"from_attributes": True}
 

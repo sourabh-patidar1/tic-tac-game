@@ -21,10 +21,45 @@ def check_winner(board: str):
     return None
 
 def ai_move(board: str):
-    empty_spots = [i for i, char in enumerate(board) if char == " "]
-    if empty_spots:
-        return random.choice(empty_spots)
-    return None
+    """Minimax algorithm for unbeatable AI."""
+    def get_score(b: str):
+        winner = check_winner(b)
+        if winner == "O": return 1
+        if winner == "X": return -1
+        return 0
+
+    def minimax(b: str, is_maximizing: bool):
+        score = get_score(b)
+        if score != 0 or " " not in b:
+            return score
+
+        if is_maximizing:
+            best_score = -float('inf')
+            for i in range(9):
+                if b[i] == " ":
+                    new_board = b[:i] + "O" + b[i+1:]
+                    s = minimax(new_board, False)
+                    best_score = max(s, best_score)
+            return best_score
+        else:
+            best_score = float('inf')
+            for i in range(9):
+                if b[i] == " ":
+                    new_board = b[:i] + "X" + b[i+1:]
+                    s = minimax(new_board, True)
+                    best_score = min(s, best_score)
+            return best_score
+
+    best_val = -float('inf')
+    best_move = -1
+    for i in range(9):
+        if board[i] == " ":
+            new_board = board[:i] + "O" + board[i+1:]
+            move_val = minimax(new_board, False)
+            if move_val > best_val:
+                best_val = move_val
+                best_move = i
+    return best_move
 
 @router.post("/start-game", response_model=schemas.GameState)
 def start_game(game: schemas.GameCreate, db: Session = Depends(database.get_db)):
@@ -59,6 +94,11 @@ def make_move(move: schemas.Move, db: Session = Depends(database.get_db)):
     board_list[move.position] = move.player
     game.board = "".join(board_list)
     
+    # Track move history
+    current_history = game.moves_history.split(",") if game.moves_history else []
+    current_history.append(str(move.position))
+    game.moves_history = ",".join(current_history)
+    
     winner = check_winner(game.board)
     if winner:
         game.winner = winner
@@ -79,6 +119,11 @@ def make_move(move: schemas.Move, db: Session = Depends(database.get_db)):
                     game.status = "completed"
                 else:
                     game.current_turn = "X"
+                
+                # Track AI move history
+                current_history = game.moves_history.split(",") if game.moves_history else []
+                current_history.append(str(pos))
+                game.moves_history = ",".join(current_history)
 
     db.commit()
     db.refresh(game)
@@ -103,3 +148,7 @@ def get_leaderboard(db: Session = Depends(database.get_db)):
     
     sorted_stats = sorted(stats.items(), key=lambda item: item[1], reverse=True)
     return [{"player": player, "wins": wins} for player, wins in sorted_stats]
+
+@router.get("/games/recent", response_model=list[schemas.GameState])
+def get_recent_games(db: Session = Depends(database.get_db)):
+    return db.query(models.Game).order_by(models.Game.created_at.desc()).limit(10).all()
